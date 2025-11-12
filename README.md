@@ -1,5 +1,7 @@
 # Django Error Logger
 
+Keep It Simple and Stupid replacement of Sentry for error logging in django project.
+
 A Django application that logs HTTP 500 errors to the database, capturing detailed context including user information, request details, and POST data.
 
 ## Features
@@ -15,35 +17,115 @@ A Django application that logs HTTP 500 errors to the database, capturing detail
 
 ## Installation
 
-### From Source (for including in another project)
+### Method 1: Install from PyPI (Recommended)
 
-1. Copy the `error_logger` directory to your project
+From any Django project:
 
-2. Add `error_logger` to your `INSTALLED_APPS`:
+```bash
+pip install django-error-logger
+```
+
+## 🚀 Quick Integration
+
+After installation, integrate into your Django project:
+
+### Step 1: Add to INSTALLED_APPS
+
+Edit `settings.py`:
 
 ```python
 INSTALLED_APPS = [
-    # ...
-    'error_logger',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    # ... your other apps ...
+    'error_logger',  # Add this
 ]
 ```
 
-2. Add the middleware to `MIDDLEWARE` (near the end):
+### Step 2: Add Middleware
+
+Edit `settings.py`:
 
 ```python
 MIDDLEWARE = [
-    # ... other middleware ...
-    'error_logger.middleware.ErrorLoggingMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # ... your other middleware ...
+    'error_logger.middleware.ErrorLoggingMiddleware',  # Add at the end
 ]
 ```
 
-3. (Optional) Install `django-su` for user impersonation feature:
+### Step 3: Add URLs
+
+Edit your main `urls.py`:
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # ... your other URLs ...
+    path('error-logger/', include('error_logger.urls')),  # Add this
+]
+```
+
+### Step 4: Run Migrations
+
+```bash
+python manage.py migrate error_logger
+```
+
+### Step 5: Test It
+
+```bash
+# Start your Django server
+python manage.py runserver
+
+# Trigger a test error (development only!)
+curl http://localhost:8000/error-logger/test/500/
+
+# Check Django admin
+open http://localhost:8000/admin/error_logger/errorlog/
+```
+
+### Step 6: User Permissions
+To access the error logger views (such as the error log list, details, and test endpoints), users must be logged in and have the error_logger.view_errorlog permission. This permission is automatically created when you run migrations.
+
+#### Assigning Permissions
+You can assign this permission to users or groups via the Django admin interface:
+
+ 1. Go to the Django admin at /admin/.
+ 1. Navigate to **Users** or **Groups**.
+ 1. Select a user or group.
+ 1. In the permissions section, check the box for **Can view error log** under the **Error logger** app.
+ 1. Save the changes.
+
+Alternatively, you can assign permissions programmatically in your code or via fixtures.
+
+Note: Only users with this permission can access the error logger URLs. Ensure your authentication system is properly configured.
+
+
+---
+
+## 🔧 Optional: User Impersonation Feature
+
+To enable the "impersonate user" feature in admin:
 
 ```bash
 pip install django-su
 ```
 
-Then add to `INSTALLED_APPS`:
+Then add to `settings.py`:
 
 ```python
 INSTALLED_APPS = [
@@ -53,7 +135,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-And include django-su URLs:
+And add to `urls.py`:
 
 ```python
 urlpatterns = [
@@ -62,21 +144,20 @@ urlpatterns = [
 ]
 ```
 
-4. Include the URLs in your main `urls.py`:
+---
 
-```python
-urlpatterns = [
-    # ...
-    path('error-logger/', include('error_logger.urls')),
-]
-```
 
-5. Run migrations:
+## ⚠️ Production Considerations
 
-```bash
-python manage.py makemigrations error_logger
-python manage.py migrate error_logger
-```
+Before deploying to production:
+
+1. **Remove Test Endpoints**: Comment out or remove test views in `error_logger/views.py`
+2. **Access Control**: Ensure only admin users can access `/error-logger/` URLs
+3. **Log Cleanup**: Implement a strategy to clean up old error logs
+4. **Review Sensitive Fields**: Customize the `SENSITIVE_FIELDS` list for your app
+5. **Database Size**: Monitor error log table size
+
+---
 
 ## Configuration
 
@@ -232,18 +313,7 @@ The error log's `additional_info` should contain:
 4. **Database Storage**: Error logs can accumulate. Implement a cleanup strategy (e.g., delete logs older than 90 days)
 5. **HTML Traceback**: Contains full request context. Ensure admin access is properly secured
 
-## Cleanup Strategy
 
-Add a management command to clean up old error logs:
-
-```bash
-python manage.py shell
->>> from error_logger.models import ErrorLog
->>> from django.utils import timezone
->>> from datetime import timedelta
->>> cutoff_date = timezone.now() - timedelta(days=90)
->>> ErrorLog.objects.filter(error_time__lt=cutoff_date).delete()
-```
 
 ## Requirements
 
