@@ -9,28 +9,32 @@ def is_admin(user):
     """Check if user belongs to the 'admin' group"""
     return user.groups.filter(name='admin').exists()
 
-def admin_required(view_func):
-    """Decorator to restrict access to users in the 'admin' group"""
-    decorated_view = login_required(user_passes_test(is_admin)(view_func))
+def can_read_errorlog(user):
+    """Check if user has permission to view ErrorLog"""
+    return user.has_perm('error_logger.view_errorlog')
+
+def errorlog_reader_required(view_func):
+    """Decorator to restrict access to users who can read ErrorLog"""
+    decorated_view = login_required(user_passes_test(can_read_errorlog)(view_func))
     return decorated_view
 
-@admin_required
+@errorlog_reader_required
 def error_log_list(request):
     logs = ErrorLog.objects.all().order_by('-error_time')
     return render(request, 'error_logger/error_log_list.html', {'logs': logs})
 
-@admin_required
+@errorlog_reader_required
 def error_log_detail(request, log_id):
     log = ErrorLog.objects.get(id=log_id)
     return render(request, 'error_logger/error_log_detail.html', {'log': log})
 
-@admin_required
+@errorlog_reader_required
 def error_log_html(request, log_id):
     """Display the full HTML traceback page"""
     log = get_object_or_404(ErrorLog, id=log_id)
     return HttpResponse(log.html_traceback)
 
-@admin_required
+@errorlog_reader_required
 def test_500_error(request):
     """
     Test view to trigger a 500 error for testing the error logger.
@@ -39,14 +43,14 @@ def test_500_error(request):
     result = 1 / 0
     return HttpResponse("This should never be reached")
 
-@admin_required
+@errorlog_reader_required
 def test_value_error(request):
     """
     Test view to trigger a ValueError.
     """
     raise ValueError("This is a test ValueError for error logging")
 
-@admin_required
+@errorlog_reader_required
 def test_key_error(request):
     """
     Test view to trigger a KeyError.
@@ -54,7 +58,7 @@ def test_key_error(request):
     test_dict = {'key': 'value'}
     return HttpResponse(test_dict['nonexistent_key'])
 
-@admin_required
+@errorlog_reader_required
 def test_post_error(request):
     """
     Test view to trigger an error with POST data.
@@ -70,7 +74,7 @@ def test_post_error(request):
     
     return render(request, 'error_logger/test_post_error.html', {'form': form})
 
-@admin_required
+@errorlog_reader_required
 def test_large_post_error(request):
     """
     Test view to trigger an error with large POST data.
