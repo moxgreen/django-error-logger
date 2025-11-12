@@ -253,4 +253,4 @@ python manage.py shell
 
 ## License
 
-[Your License Here]
+AGPL-3.0

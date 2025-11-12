@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "A Django application that logs HTTP 500 errors with detailed context"
 readme = "README.md"
 requires-python = ">=3.8"
-license = "MIT"
+license = "AGPL-3.0"
 authors = [
     {name = "Your Name", email = "your.email@example.com"}
 ]
@@ -43,10 +43,10 @@ dependencies = [
 impersonation = ["django-su>=1.0.0"]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/django-error-logger"
-Documentation = "https://github.com/yourusername/django-error-logger#readme"
-Repository = "https://github.com/yourusername/django-error-logger"
-"Bug Tracker" = "https://github.com/yourusername/django-error-logger/issues"
+Homepage = "https://github.com/moxgreen/django-error-logger"
+Documentation = "https://github.com/moxgreen/django-error-logger"
+Repository = "https://github.com/moxgreen/django-error-logger"
+"Bug Tracker" = "https://github.com/moxgreen/django-error-logger/issues"
 
 [tool.setuptools.packages.find]
 include = ["error_logger*"]

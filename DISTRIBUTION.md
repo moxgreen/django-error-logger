@@ -24,7 +24,7 @@ error_logger/
 │       ├── test_large_post_error.html
 │       └── test_post_error.html
 ├── README.md                   # Documentation
-├── LICENSE                     # MIT License
+├── LICENSE                     # AGPL-3.0 License
 ├── setup.py                    # Setup configuration (legacy)
 ├── pyproject.toml             # Modern Python packaging
 ├── MANIFEST.in                # Package data inclusion
@@ -319,4 +319,4 @@ For issues, feature requests, or contributions, please visit:
 
 ## License
 
-MIT License - See LICENSE file for details
+AGPL-3.0 License - See LICENSE file for details

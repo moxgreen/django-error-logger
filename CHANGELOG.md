@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Distribution guide (DISTRIBUTION.md)
 - Quick start guide (QUICKSTART.md)
 - Setup.py and pyproject.toml for packaging
-- MIT License
+- AGPL-3.0 License
 
 ### Security
 - Sensitive field redaction in POST data
