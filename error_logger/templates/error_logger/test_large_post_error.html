@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Large POST Error</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        .helptext {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 3px;
+            display: block;
+        }
+        button {
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #c82333;
+        }
+        h2 {
+            color: #333;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="warning">
+        <strong>⚠️ Warning:</strong> This will intentionally send a large POST payload (150KB) and cause an error.
+    </div>
+
+    <div class="info">
+        <strong>ℹ️ Info:</strong> POST payloads larger than 100KB should be filtered and not logged in full.
+    </div>
+
+    <h2>Test Large POST Error</h2>
+    
+    <div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <span class="helptext">{{ field.help_text }}</span>
+                    {% endif %}
+                    {% if field.errors %}
+                        <span class="error">{{ field.errors }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit">Submit Large POST (will cause error)</button>
+        </form>
+    </div>
+
+    <p><a href="{% url 'error_logger:test_post_error' %}">← Back to Normal POST Test</a></p>
+</body>
+</html>
