@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-error-logger"
-version = "1.0.0"
+version = "1.0.1"
 description = "A Django application that logs HTTP 500 errors with detailed context"
 readme = "README.md"
 requires-python = ">=3.8"

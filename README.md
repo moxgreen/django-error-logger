@@ -17,10 +17,6 @@ A Django application that logs HTTP 500 errors to the database, capturing detail
 
 ## Installation
 
-### Method 1: Install from PyPI (Recommended)
-
-From any Django project:
-
 ```bash
 pip install django-error-logger
 ```

@@ -2,15 +2,9 @@
 
 ## 📦 Installation Methods
 
-### Method 1: Install from PyPI (Recommended)
-
-From any Django project:
-
 ```bash
 pip install django-error-logger
 ```
-
-
 
 ## 🚀 Quick Integration
 
@@ -94,7 +88,7 @@ You can assign this permission to users or groups via the Django admin interface
  1. Go to the Django admin at /admin/.
  1. Navigate to **Users** or **Groups**.
  1. Select a user or group.
- 1. In the permissions section, check the box for **Can view error log** under the **Error logger** app.
+ 1. In the permissions section, check the box for **Can view error log** under the **Error logger app.
  1. Save the changes.
 
 Alternatively, you can assign permissions programmatically in your code or via fixtures.
