@@ -1,3 +1,5 @@
 .pypirc
 django_error_logger.egg-info
 dist
+__pycache__/
+*.pyc
