@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class ErrorLog(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     error_message = models.TextField()  # Plain text - str(exception)
     error_type = models.CharField(max_length=255)  # e.g., "ValueError", "ZeroDivisionError"
     traceback = models.TextField()  # Plain text - full Python traceback
